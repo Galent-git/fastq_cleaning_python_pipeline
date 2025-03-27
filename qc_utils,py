@@ -1,1 +1,24 @@
+import subprocess
+import logging
+logger = logging.getLogger("fastq_pipeline")
+
+def which_tool(name: str) -> bool:
+    from shutil import which
+    return which(name) is not None
+
+def run_fastqc(infile, outdir):
+    cmd = ["fastqc", infile, "--outdir", outdir]
+    subprocess.run(cmd, check=True)
+
+def run_multiqc(in_dir, out_file):
+    cmd = ["multiqc", in_dir, "--outfile", out_file]
+    subprocess.run(cmd, check=True)
+
+def parse_multiqc_for_adapter_info(multiqc_json):
+    # read JSON, extract adapter contamination etc.
+    return {'adapter_issue': False, 'quality_drop_position': None}
+
+def suggest_fastp_cmd(min_len, qc_info):
+    # build fastp command
+    return "fastp -i input.fastq -o output.fastq --cut_mean_quality 20"
 
